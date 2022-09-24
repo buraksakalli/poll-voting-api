@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const { createEntry } = require('../src/models');
+const { createEntry } = require('../src/services');
 
 describe('createEntry', () => {
   it('should return 500', async () => {

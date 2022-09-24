@@ -5,7 +5,8 @@
   "scripts": {
     "test": "mocha 'test/**/*.js' --recursive --timeout 60000 --exit",
     "start": "ts-node ./src/index.ts",
-    "dev": "ts-node-dev --respawn ./src/index.ts"
+    "dev": "ts-node-dev --respawn ./src/index.ts",
+    "prepare": "husky install"
   },
   "author": "Burak Sakalli",
   "license": "MIT",
@@ -20,6 +21,9 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.7.19",
+    "commitizen": "^4.2.5",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^8.0.1",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
@@ -36,5 +40,15 @@
     "jsonwebtoken": "^8.5.1",
     "mocha": "^10.0.0",
     "mongoose": "^6.6.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
   }
 }
