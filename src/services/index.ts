@@ -21,7 +21,7 @@ export const createUser = async (user: IUser) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(user.password, salt);
 
-  const newUser = new User({
+  const newUser = await new User({
     ...user,
     password: hashedPassword,
   });
@@ -109,7 +109,7 @@ export const updateEntry = async (id: string, entry: any) => {
 };
 
 export const userLogin = async (email: string, password: string) => {
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email });
   if (!user) return { message: 'Email is not found' };
 
   const validPass = await bcrypt.compare(password, user.password);

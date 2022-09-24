@@ -75,7 +75,6 @@ export const create_poll = async (req: Request, res: Response) => {
 
 export const get_all_entries = async (req: Request, res: Response) => {
   getAllEntries().then(entries => {
-    console.log(entries);
     res.json(entries);
   });
 };
@@ -95,6 +94,6 @@ export const create_entry = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   userLogin(req.body.email, req.body.password).then(user => {
-    res.header('auth-token').json(user);
+    res.header('Authorization').json(user);
   });
 };

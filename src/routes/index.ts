@@ -1,3 +1,4 @@
+import { Application } from 'express';
 import {
   get_all_users,
   get_user_by_id,
@@ -12,7 +13,7 @@ import {
 } from '../controller';
 import { auth } from '../utils/verifyToken';
 
-export default (app: any) => {
+export default (app: Application) => {
   app.route('/users/:id').get(get_user_by_id);
   app.route('/users').post(create_user);
   app.route('/polls').get(get_all_polls);
@@ -27,6 +28,6 @@ export default (app: any) => {
   // app.route("/entries/:id").put(update_entry);
   // app.route("/entries/:id").delete(delete_entry);
   app.route('/login').post(login);
-  app.use(auth);
+  // app.use(auth);
   app.route('/users').get(get_all_users);
 };

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import routes from './routes';
+import cors from 'cors';
 import * as dotenv from 'dotenv';
+import routes from './routes';
 
 dotenv.config();
 
@@ -9,6 +10,7 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   port = process.env.PORT || 3001;
 
+app.use(cors({ credentials: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

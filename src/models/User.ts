@@ -27,7 +27,7 @@ export const userSchema = new Schema<IUser>({
     required: true,
     min: 6,
     max: 1024,
-    select: false,
+    // select: false,
   },
   username: {
     type: String,
