@@ -61,7 +61,7 @@ export const createEntry = async (body: IEntry) => {
     option: body.option,
   });
 
-  const res = entry
+  const res: any = entry
     .save()
     .then(res => {
       return {

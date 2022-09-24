@@ -1,5 +1,7 @@
 # Poll Voting
 
+![cactus](https://user-images.githubusercontent.com/10114716/192103076-f0c86cf6-63ad-4296-be8e-b955ee4133ac.png)
+
 This is a simple poll voting app that allows users to vote on polls and view the results.
 
 ## Getting Started

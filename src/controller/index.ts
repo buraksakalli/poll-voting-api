@@ -76,7 +76,6 @@ export const get_entry_by_id = async (req: Request, res: Response) => {
 
 export const create_entry = async (req: Request, res: Response) => {
   createEntry(req.body).then(entry => {
-    console.log(entry);
     res.json(entry);
   });
 };
