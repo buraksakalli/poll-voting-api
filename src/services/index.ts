@@ -1,13 +1,37 @@
-import { User, Poll, Entry, IPoll, IEntry } from '../schema';
+import { IUser, User } from '../models/User';
+import { Poll, IPoll } from '../models/Poll';
+import { Entry, IEntry } from '../models/Entry';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export const getAllUsers = async () => {
-  const users = await User.find({});
+  const users = await User.find({}).select('-password');
   return users;
 };
 
 export const getUserById = async (id: string) => {
   const user = await User.findById(id);
   return user;
+};
+
+export const createUser = async (user: IUser) => {
+  const emailExist = await User.findOne({ email: user.email });
+  if (emailExist) return { message: 'Email already exists' };
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(user.password, salt);
+
+  const newUser = new User({
+    ...user,
+    password: hashedPassword,
+  });
+
+  const savedUser = await newUser.save();
+
+  return {
+    id: savedUser._id,
+    fullname: savedUser.fullname,
+  };
 };
 
 export const getAllPolls = async () => {
@@ -82,4 +106,21 @@ export const createEntry = async (body: IEntry) => {
 export const updateEntry = async (id: string, entry: any) => {
   const updatedEntry = await Entry.findByIdAndUpdate(id, entry, { new: true });
   return updatedEntry;
+};
+
+export const userLogin = async (email: string, password: string) => {
+  const user = await User.findOne({ email: email });
+  if (!user) return { message: 'Email is not found' };
+
+  const validPass = await bcrypt.compare(password, user.password);
+  if (!validPass) return { message: 'Invalid password' };
+
+  // create and assign a token
+  const token = jwt.sign({ _id: user._id, fullname: user.fullname }, process.env['TOKEN_SECRET'] as string);
+
+  return {
+    id: user._id,
+    fullname: user.fullname,
+    token,
+  };
 };

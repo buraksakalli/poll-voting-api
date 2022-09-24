@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { IUser } from '../models/User';
 import {
   getAllUsers,
   getUserById,
@@ -8,17 +9,29 @@ import {
   getAllEntries,
   getEntryById,
   createEntry,
-} from '../models';
+  createUser,
+  userLogin,
+} from '../services';
 
 export const get_all_users = async (req: Request, res: Response) => {
-  getAllUsers().then(users => {
-    res.json(users);
+  const users: Array<IUser> = await getAllUsers();
+
+  res.status(200).json({
+    status: 'success',
+    data: users,
   });
 };
 
 export const get_user_by_id = async (req: Request, res: Response) => {
   const id = req.params.id;
   getUserById(id).then(user => {
+    res.json(user);
+  });
+};
+
+// TODO: add validator middlware to create_user
+export const create_user = async (req: Request, res: Response) => {
+  createUser(req.body).then(user => {
     res.json(user);
   });
 };
@@ -77,5 +90,11 @@ export const get_entry_by_id = async (req: Request, res: Response) => {
 export const create_entry = async (req: Request, res: Response) => {
   createEntry(req.body).then(entry => {
     res.json(entry);
+  });
+};
+
+export const login = async (req: Request, res: Response) => {
+  userLogin(req.body.email, req.body.password).then(user => {
+    res.header('auth-token').json(user);
   });
 };
