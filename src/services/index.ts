@@ -1,8 +1,6 @@
-import { IUser, User } from '../models/User';
-import { Poll, IPoll } from '../models/Poll';
-import { Entry, IEntry } from '../models/Entry';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { IUser, User, Poll, IPoll, Entry, IEntry } from '../models';
 
 export const getAllUsers = async () => {
   const users = await User.find({}).select('-password');
@@ -15,9 +13,21 @@ export const getUserById = async (id: string) => {
 };
 
 export const getUsersPollsByUserId = async (id: string) => {
-  // get entries for each poll and return user data.
   const polls = await Poll.find({ user_id: id });
-  return polls;
+
+  const res = await Promise.all(
+    polls.map(async poll => {
+      const entries = await Entry.find({ poll_id: poll._id });
+      const user = await User.findById(poll.user_id);
+      return {
+        poll,
+        user: { fullname: user?.fullname },
+        entries: entries.length,
+      };
+    }),
+  );
+
+  return res;
 };
 
 export const createUser = async (user: IUser) => {
@@ -45,8 +55,19 @@ export const getAllPolls = async (page: number) => {
     .limit(5)
     .skip((page - 1) * 5);
 
-  // TODO: get entries and return total votes.
-  return polls;
+  const res = await Promise.all(
+    polls.map(async poll => {
+      const entries = await Entry.find({ poll_id: poll._id });
+      const user = await User.findById(poll.user_id);
+      return {
+        poll,
+        user: { fullname: user?.fullname },
+        entries: entries.length,
+      };
+    }),
+  );
+
+  return res;
 };
 
 export const getPollById = async (id: string) => {
@@ -59,8 +80,8 @@ export const getPollBySlug = async (slug: string) => {
 
   if (!poll) return { message: 'Poll not found' };
 
-  // get poll results by slug
   const entries = await Entry.find({ poll_id: poll._id });
+  const user = await User.findById(poll.user_id);
 
   // calculate each entry by option and return the result
   const results = poll.options.map(option => {
@@ -73,7 +94,7 @@ export const getPollBySlug = async (slug: string) => {
 
   const series = results.map(result => result.total);
 
-  return { poll, entries, results, series };
+  return { poll, entries, results, series, user: { fullname: user?.fullname } };
 };
 
 export const createPoll = async (body: IPoll) => {
@@ -115,18 +136,19 @@ export const getEntryById = async (id: string) => {
 };
 
 export const createEntry = async (body: IEntry) => {
-  // check if user has voted
+  const { poll_id, user_id, option } = body;
+
   const userHasVoted = await Entry.findOne({
-    poll_id: body.poll_id,
-    user_id: body.user_id,
+    poll_id,
+    user_id,
   });
 
   if (userHasVoted) return { message: 'You have already voted', status: 400 };
 
   const entry = new Entry({
-    poll_id: body.poll_id,
-    user_id: body.user_id,
-    option: body.option,
+    poll_id,
+    user_id,
+    option,
   });
 
   const res: any = entry
@@ -144,6 +166,7 @@ export const createEntry = async (body: IEntry) => {
         message: err?.message,
       };
     });
+
   return res;
 };
 

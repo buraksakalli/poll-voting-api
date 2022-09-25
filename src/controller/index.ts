@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IUser } from '../models/User';
+import { IUser } from '../models';
 import {
   getAllUsers,
   getUserById,
@@ -99,7 +99,7 @@ export const get_entry_by_id = async (req: Request, res: Response) => {
 export const create_entry = async (req: Request, res: Response) => {
   // @ts-ignore
   createEntry({ ...req.body, user_id: req.user._id }).then(entry => {
-    res.json(entry);
+    res.status(entry.status).json(entry);
   });
 };
 
