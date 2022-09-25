@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha 'test/**/*.js' --recursive --timeout 60000 --exit",
-    "start": "ts-node ./src/index.ts",
+    "start": "node dist/index.js",
+    "postinstall": "tsc",
+    "watch-node": "nodemon dist/index.js",
+    "watch-ts": "tsc -w",
     "dev": "ts-node-dev --respawn ./src/index.ts",
     "prepare": "husky install"
   },
