@@ -6,6 +6,7 @@ export interface IPoll {
   expiry_date: Date;
   user_id: string;
   slug: string;
+  created_at: Date;
 }
 
 export const pollSchema = new Schema<IPoll>({
@@ -28,6 +29,10 @@ export const pollSchema = new Schema<IPoll>({
   slug: {
     type: String,
     required: true,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
   },
 });
 

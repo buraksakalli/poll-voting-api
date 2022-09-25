@@ -4,13 +4,13 @@ import {
   getAllUsers,
   getUserById,
   getAllPolls,
-  getPollById,
   createPoll,
   getAllEntries,
   getEntryById,
   createEntry,
   createUser,
   userLogin,
+  getPollBySlug,
 } from '../services';
 
 export const get_all_users = async (req: Request, res: Response) => {
@@ -43,8 +43,8 @@ export const get_all_polls = async (req: Request, res: Response) => {
 };
 
 export const get_poll_by_id = async (req: Request, res: Response) => {
-  const id = req.params.id;
-  getPollById(id).then(poll => {
+  const slug = req.params.id;
+  getPollBySlug(slug).then(poll => {
     res.json(poll);
   });
 };
@@ -87,7 +87,8 @@ export const get_entry_by_id = async (req: Request, res: Response) => {
 };
 
 export const create_entry = async (req: Request, res: Response) => {
-  createEntry(req.body).then(entry => {
+  // @ts-ignore
+  createEntry({ ...req.body, user_id: req.user._id }).then(entry => {
     res.json(entry);
   });
 };

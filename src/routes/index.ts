@@ -24,7 +24,6 @@ export default (app: Application) => {
 
   app.route('/entry').get(get_all_entries);
   app.route('/entry/:id').get(get_entry_by_id);
-  app.route('/entry').post(create_entry);
   // app.route("/entries/:id").put(update_entry);
   // app.route("/entries/:id").delete(delete_entry);
   app.route('/login').post(login);
@@ -36,4 +35,5 @@ export default (app: Application) => {
     res.status(200).json({ message: 'Authenticated', auth: true, user: req.user });
   });
   app.route('/users').get(get_all_users);
+  app.route('/entry').post(create_entry);
 };

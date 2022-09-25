@@ -44,6 +44,11 @@ export const getPollById = async (id: string) => {
   return poll;
 };
 
+export const getPollBySlug = async (slug: string) => {
+  const poll = await Poll.findOne({ slug });
+  return poll;
+};
+
 export const createPoll = async (body: IPoll) => {
   const poll = new Poll({ ...body });
 
@@ -79,6 +84,14 @@ export const getEntryById = async (id: string) => {
 };
 
 export const createEntry = async (body: IEntry) => {
+  // check if user has voted
+  const userHasVoted = await Entry.findOne({
+    poll_id: body.poll_id,
+    user_id: body.user_id,
+  });
+
+  if (userHasVoted) return { message: 'You have already voted', status: 400 };
+
   const entry = new Entry({
     poll_id: body.poll_id,
     user_id: body.user_id,
