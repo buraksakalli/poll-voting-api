@@ -18,7 +18,6 @@ export default (app: Application) => {
   app.route('/users').post(create_user);
   app.route('/polls').get(get_all_polls);
   app.route('/polls/:id').get(get_poll_by_id);
-  app.route('/polls').post(create_poll);
   // app.route("/polls/:id").put(update_poll);
   // app.route("/polls/:id").delete(delete_poll);
 
@@ -36,4 +35,5 @@ export default (app: Application) => {
   });
   app.route('/users').get(get_all_users);
   app.route('/entry').post(create_entry);
+  app.route('/polls').post(create_poll);
 };

@@ -50,7 +50,8 @@ export const get_poll_by_id = async (req: Request, res: Response) => {
 };
 
 export const create_poll = async (req: Request, res: Response) => {
-  createPoll(req.body).then(poll => {
+  //@ts-ignore
+  createPoll({ ...req.body, user_id: req.user._id }).then(poll => {
     res.json(poll);
   });
 };

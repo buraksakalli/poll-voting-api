@@ -50,6 +50,10 @@ export const getPollBySlug = async (slug: string) => {
 };
 
 export const createPoll = async (body: IPoll) => {
+  // if slug is already taken, generate a new one
+  const slugExist = await Poll.findOne({ slug: body.slug });
+  if (slugExist) body.slug = `${body.slug}-${Math.floor(Math.random() * 1000)}`;
+
   const poll = new Poll({ ...body });
 
   const res = poll
