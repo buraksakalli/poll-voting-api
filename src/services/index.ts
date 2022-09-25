@@ -14,6 +14,11 @@ export const getUserById = async (id: string) => {
   return user;
 };
 
+export const getUsersPollsByUserId = async (id: string) => {
+  const polls = await Poll.find({ user_id: id });
+  return polls;
+};
+
 export const createUser = async (user: IUser) => {
   const emailExist = await User.findOne({ email: user.email });
   if (emailExist) return { message: 'Email already exists' };
@@ -36,6 +41,7 @@ export const createUser = async (user: IUser) => {
 
 export const getAllPolls = async () => {
   const polls = await Poll.find({});
+  // get entries and return total votes.
   return polls;
 };
 
@@ -46,7 +52,24 @@ export const getPollById = async (id: string) => {
 
 export const getPollBySlug = async (slug: string) => {
   const poll = await Poll.findOne({ slug });
-  return poll;
+
+  if (!poll) return { message: 'Poll not found' };
+
+  // get poll results by slug
+  const entries = await Entry.find({ poll_id: poll._id });
+
+  // calculate each entry by option and return the result
+  const results = poll.options.map(option => {
+    const total = entries.filter(entry => entry.option === option).length;
+    return {
+      option,
+      total,
+    };
+  });
+
+  const series = results.map(result => result.total);
+
+  return { poll, entries, results, series };
 };
 
 export const createPoll = async (body: IPoll) => {

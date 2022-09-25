@@ -10,6 +10,7 @@ import {
   create_entry,
   create_user,
   login,
+  get_users_polls,
 } from '../controller';
 import { auth } from '../utils/verifyToken';
 
@@ -36,4 +37,5 @@ export default (app: Application) => {
   app.route('/users').get(get_all_users);
   app.route('/entry').post(create_entry);
   app.route('/polls').post(create_poll);
+  app.route('/user/polls').get(get_users_polls);
 };

@@ -11,6 +11,7 @@ import {
   createUser,
   userLogin,
   getPollBySlug,
+  getUsersPollsByUserId,
 } from '../services';
 
 export const get_all_users = async (req: Request, res: Response) => {
@@ -22,8 +23,15 @@ export const get_all_users = async (req: Request, res: Response) => {
   });
 };
 
+export const get_users_polls = async (req: Request, res: Response) => {
+  // @ts-ignore
+  getUsersPollsByUserId(req.user._id).then(polls => {
+    res.json(polls);
+  });
+};
+
 export const get_user_by_id = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   getUserById(id).then(user => {
     res.json(user);
   });
@@ -37,6 +45,7 @@ export const create_user = async (req: Request, res: Response) => {
 };
 
 export const get_all_polls = async (req: Request, res: Response) => {
+  // TODO: Add pagination
   getAllPolls().then(polls => {
     res.json(polls);
   });
@@ -57,7 +66,7 @@ export const create_poll = async (req: Request, res: Response) => {
 };
 
 // export const update_poll = async (req: Request, res: Response) => {
-//   const id = req.params.id;
+//   const { id } = req.params;
 //   const poll = new Poll({
 //     title: req.body.title,
 //     description: req.body.description,
@@ -68,7 +77,7 @@ export const create_poll = async (req: Request, res: Response) => {
 // };
 
 // export const delete_poll = async (req: Request, res: Response) => {
-//   const id = req.params.id;
+//   const { id } = req.params;
 //   deletePoll(id).then((poll) => {
 //     res.json(poll);
 //   });
@@ -81,7 +90,7 @@ export const get_all_entries = async (req: Request, res: Response) => {
 };
 
 export const get_entry_by_id = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   getEntryById(id).then(entry => {
     res.json(entry);
   });
