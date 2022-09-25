@@ -45,8 +45,8 @@ export const create_user = async (req: Request, res: Response) => {
 };
 
 export const get_all_polls = async (req: Request, res: Response) => {
-  // TODO: Add pagination
-  getAllPolls().then(polls => {
+  const { page = 1 } = req.query;
+  getAllPolls(Number(page)).then(polls => {
     res.json(polls);
   });
 };

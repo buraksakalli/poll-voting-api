@@ -15,6 +15,7 @@ export const getUserById = async (id: string) => {
 };
 
 export const getUsersPollsByUserId = async (id: string) => {
+  // get entries for each poll and return user data.
   const polls = await Poll.find({ user_id: id });
   return polls;
 };
@@ -39,9 +40,12 @@ export const createUser = async (user: IUser) => {
   };
 };
 
-export const getAllPolls = async () => {
-  const polls = await Poll.find({});
-  // get entries and return total votes.
+export const getAllPolls = async (page: number) => {
+  const polls = await Poll.find({})
+    .limit(5)
+    .skip((page - 1) * 5);
+
+  // TODO: get entries and return total votes.
   return polls;
 };
 
