@@ -93,7 +93,7 @@ export const create_entry = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  userLogin(req.body.email, req.body.password).then(user => {
-    res.header('Authorization').json(user);
+  userLogin(req.body.email, req.body.password).then(response => {
+    res.header('Authorization').status(response.status).json(response);
   });
 };

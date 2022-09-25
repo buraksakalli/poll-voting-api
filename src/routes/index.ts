@@ -1,4 +1,4 @@
-import { Application } from 'express';
+import { Application, Request } from 'express';
 import {
   get_all_users,
   get_user_by_id,
@@ -28,6 +28,12 @@ export default (app: Application) => {
   // app.route("/entries/:id").put(update_entry);
   // app.route("/entries/:id").delete(delete_entry);
   app.route('/login').post(login);
-  // app.use(auth);
+
+  // @ts-ignore
+  app.use(auth);
+  app.route('/auth').post((req, res) => {
+    // @ts-ignore
+    res.status(200).json({ message: 'Authenticated', auth: true, user: req.user });
+  });
   app.route('/users').get(get_all_users);
 };

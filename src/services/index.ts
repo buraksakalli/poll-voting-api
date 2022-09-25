@@ -110,17 +110,17 @@ export const updateEntry = async (id: string, entry: any) => {
 
 export const userLogin = async (email: string, password: string) => {
   const user = await User.findOne({ email });
-  if (!user) return { message: 'Email is not found' };
+  if (!user) return { message: 'Email or password is wrong', status: 401 };
 
   const validPass = await bcrypt.compare(password, user.password);
-  if (!validPass) return { message: 'Invalid password' };
+  if (!validPass) return { message: 'Email or password is wrong', status: 401 };
 
-  // create and assign a token
   const token = jwt.sign({ _id: user._id, fullname: user.fullname }, process.env['TOKEN_SECRET'] as string);
 
   return {
     id: user._id,
     fullname: user.fullname,
     token,
+    status: 200,
   };
 };
